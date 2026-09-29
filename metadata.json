@@ -1,0 +1,6 @@
+{
+  "name": "Scroll 4 Learning",
+  "description": "India's premier dual-portal education platform featuring dedicated Student & Mentor Portals with seamless authentication, 60-second micro-reels, live masterclass broadcasts, VidyaCoin creator economy, and peer doubt resolution.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

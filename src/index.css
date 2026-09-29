@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-vidya-indigo: #4f46e5;
+    --color-vidya-emerald: #10b981;
+    --color-vidya-amber: #f59e0b;
+    --color-vidya-bg: #6f7279;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #bfc4cf;
+    color: #f8fafc;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(234, 235, 236, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #4f46e5, #ddbe77);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #6366f1, #f59e0b);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Vibrant Vidya Edu Theme Utilities */
+.text-vidya-gradient {
+  background: linear-gradient(135deg, #818cf8 0%, #34d399 50%, #fbbf24 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-vidya-gradient {
+  background: linear-gradient(135deg, #4f46e5 0%, #059669 50%, #d97706 100%);
+}
+
+.bg-vidya-glass {
+  background: rgba(239, 239, 240, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(234, 234, 238, 0.2);
+}
+
+.shadow-vidya-glow {
+  box-shadow: 0 0 25px -5px rgba(79, 70, 229, 0.4), 0 0 15px -5px rgba(16, 185, 129, 0.3);
+}
+
+.shadow-amber-glow {
+  box-shadow: 0 0 20px -3px rgba(245, 158, 11, 0.4);
+}
+
+.shadow-emerald-glow {
+  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.4);
+}
+
+/* Standard line-clamp fallback */
+@supports (line-clamp: 1) or (-webkit-line-clamp: 1) {
+  .line-clamp-1 { line-clamp: 1; }
+  .line-clamp-2 { line-clamp: 2; }
+  .line-clamp-3 { line-clamp: 3; }
+}
+
