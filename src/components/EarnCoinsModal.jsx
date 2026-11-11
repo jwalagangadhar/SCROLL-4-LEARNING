@@ -14,7 +14,9 @@ export const EarnCoinsModal = ({
   onOpenSponsorAd,
   onClose,
 }) => {
-  const [claimedToday, setClaimedToday] = useState(false);
+  const todayStr = new Date().toISOString().split("T")[0];
+  const isAlreadyClaimedToday = userProfile?.lastStreakClaimDate === todayStr && (userProfile?.streakDays || 0) > 0;
+  const [claimedToday, setClaimedToday] = useState(isAlreadyClaimedToday);
 
   const streakDays = [
     { day: 1, reward: 10, label: "Day 1" },

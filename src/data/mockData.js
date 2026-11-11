@@ -979,7 +979,7 @@ export const INITIAL_USER_PROFILE = {
   vidyaCoins: 65,
   coinsEarnedLifetime: 280,
   streakDays: 4,
-  lastStreakClaimDate: "2026-08-16",
+  lastStreakClaimDate: "2026-08-15",
   targetExam: "JEE Advanced & Tech Skills",
   preferredLanguage: "Hinglish",
   unlockedReelIds: ["reel-1", "reel-2", "reel-3", "reel-6", "reel-8"],

@@ -87,6 +87,7 @@ export function App() {
   const [activeAiSummaryReel, setActiveAiSummaryReel] = useState(null);
   const [activeMaterialsReel, setActiveMaterialsReel] = useState(null);
   const [initialReelContext, setInitialReelContext] = useState(null);
+  const [targetReelId, setTargetReelId] = useState(null);
 
   // Sync state to localStorage
   useEffect(() => {
@@ -232,14 +233,30 @@ export function App() {
 
   // ==================== Interactions ====================
   const handleLikeToggle = (reelId) => {
-    setReels((prev) =>
-      prev.map((r) => {
-        if (r.id === reelId) {
-          return { ...r, likes: r.likes + 1 };
-        }
-        return r;
-      })
-    );
+    setUserProfile((prev) => {
+      const likedList = prev.likedReelIds || [];
+      const isAlreadyLiked = likedList.includes(reelId);
+      const updatedList = isAlreadyLiked
+        ? likedList.filter((id) => id !== reelId)
+        : [...likedList, reelId];
+
+      setReels((prevReels) =>
+        prevReels.map((r) => {
+          if (r.id === reelId) {
+            return {
+              ...r,
+              likes: isAlreadyLiked ? Math.max(0, r.likes - 1) : r.likes + 1,
+            };
+          }
+          return r;
+        })
+      );
+
+      return {
+        ...prev,
+        likedReelIds: updatedList,
+      };
+    });
   };
 
   const handleBookmarkToggle = (reelId) => {
@@ -369,7 +386,7 @@ export function App() {
   };
 
   const handleClaimDailyStreak = () => {
-    const todayStr = "2026-08-16";
+    const todayStr = new Date().toISOString().split("T")[0];
     setUserProfile((prev) => ({
       ...prev,
       streakDays: prev.streakDays + 1,
@@ -756,6 +773,8 @@ export function App() {
             {activeView === "reels" && (
               <ReelFeed
                 reels={reels}
+                targetReelId={targetReelId}
+                onClearTargetReelId={() => setTargetReelId(null)}
                 userProfile={userProfile}
                 selectedCategory={selectedCategory}
                 onSelectCategory={(cat) => setSelectedCategory(cat)}
@@ -787,6 +806,7 @@ export function App() {
                 seriesList={seriesList}
                 userProfile={userProfile}
                 onSelectReel={(reel) => {
+                  setTargetReelId(reel.id);
                   setActiveView("reels");
                 }}
                 onUnlockSeries={handleUnlockSeries}
@@ -835,6 +855,7 @@ export function App() {
                 allReels={reels}
                 allSeries={seriesList}
                 onSelectReel={(reel) => {
+                  setTargetReelId(reel.id);
                   setActiveView("reels");
                 }}
                 onSelectSeries={(seriesId) => {

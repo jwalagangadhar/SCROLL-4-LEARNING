@@ -24,10 +24,10 @@ export const DailyStreakAlertBanner = ({
   const [activeTab, setActiveTab] = useState("streak");
   const [streakClaimedFeedback, setStreakClaimedFeedback] = useState(false);
 
-  const todayStr = "2026-08-16";
-  const hasClaimedToday = userProfile.lastStreakClaimDate === todayStr && userProfile.streakDays > 0;
+  const todayStr = new Date().toISOString().split("T")[0];
+  const hasClaimedToday = userProfile?.lastStreakClaimDate === todayStr && (userProfile?.streakDays || 0) > 0;
 
-  const topBookmarkedSeries = bookmarkedSeries[0];
+  const topBookmarkedSeries = (bookmarkedSeries || [])[0];
 
   const handleClaim = () => {
     onClaimDailyStreak();

@@ -273,7 +273,7 @@ export const WeeklyGoalsModal = ({
           <div className="space-y-3">
             {(isEditing ? customGoals : weeklyGoals.goals).map((goal) => {
               const isGoalCompleted = goal.currentCount >= goal.targetCount;
-              const goalPercent = Math.min(100, Math.round((goal.currentCount / goal.targetCount) * 100));
+              const goalPercent = goal.targetCount > 0 ? Math.min(100, Math.round(((goal.currentCount || 0) / goal.targetCount) * 100)) : 0;
 
               return (
                 <div

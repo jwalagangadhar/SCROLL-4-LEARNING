@@ -20,7 +20,7 @@ export const StudyMaterialsModal = ({
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">Mentor Study Materials</h3>
-              <p className="text-[10px] text-slate-400">By {reel.mentor.name}</p>
+              <p className="text-[10px] text-slate-400">By {reel?.mentor?.name || "Mentor"}</p>
             </div>
           </div>
 

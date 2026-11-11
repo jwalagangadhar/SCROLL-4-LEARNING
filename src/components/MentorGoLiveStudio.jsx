@@ -22,7 +22,7 @@ export const MentorGoLiveStudio = ({
   // Form State for Scheduling
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [subject, setSubject] = useState(currentMentor.category || "JEE / NEET Prep");
+  const [subject, setSubject] = useState(currentMentor?.category || "JEE / NEET Prep");
   const [topicTag, setTopicTag] = useState("");
   const [scheduledTime, setScheduledTime] = useState("Tonight at 8:30 PM IST");
   const [accessType, setAccessType] = useState("pay_per_view");
@@ -90,7 +90,7 @@ export const MentorGoLiveStudio = ({
     const newSession = {
       id: `live-sched-${Date.now()}`,
       title: title.trim(),
-      description: description.trim() || `Live deep dive session hosted by ${currentMentor.name}.`,
+      description: description.trim() || `Live deep dive session hosted by ${currentMentor?.name || "Expert Mentor"}.`,
       mentor: currentMentor,
       subject,
       topicTag: topicTag.trim() || "Masterclass",

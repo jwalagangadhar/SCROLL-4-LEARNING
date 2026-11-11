@@ -48,12 +48,12 @@ export const MentorPortalView = ({
   const handleSwitchToStudent = onSwitchToStudentPortal || onSwitchToStudent || (() => {});
   const [activeTab, setActiveTab] = useState("live");
   const [isOnline, setIsOnline] = useState(currentMentor?.isOnline ?? true);
-  const [selectedMentor, setSelectedMentor] = useState(currentMentor);
+  const [selectedMentor, setSelectedMentor] = useState(currentMentor || allMentors[0] || {});
 
   // New Reel Form State
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [subject, setSubject] = useState(currentMentor.category || "JEE / NEET Prep");
+  const [subject, setSubject] = useState(currentMentor?.category || "JEE / NEET Prep");
   const [topicTag, setTopicTag] = useState("");
   const [visualType, setVisualType] = useState("physics_optics");
   const [mediaSourceType, setMediaSourceType] = useState("video_file");
@@ -87,7 +87,7 @@ export const MentorPortalView = ({
 
   // Filter mentor's own reels with fallback to at least 2 reels
   const rawMentorReels = allReels.filter(
-    (r) => r.mentor.id === selectedMentor.id || r.mentor.name === selectedMentor.name
+    (r) => r.mentor?.id === selectedMentor?.id || r.mentor?.name === selectedMentor?.name
   );
   
   const activeMentorReels = rawMentorReels.filter((r) => !deletedReelIds.includes(r.id));

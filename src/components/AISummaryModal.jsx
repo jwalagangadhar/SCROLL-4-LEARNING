@@ -13,7 +13,7 @@ export const AISummaryModal = ({ reel, onClose }) => {
       body: JSON.stringify({
         title: reel.title,
         subject: reel.subject,
-        mentorName: reel.mentor.name,
+        mentorName: reel.mentor?.name || "Expert Mentor",
         description: reel.description,
       }),
     })
@@ -52,7 +52,7 @@ export const AISummaryModal = ({ reel, onClose }) => {
                 AI 60-Second Flashcard Notes
               </h3>
               <p className="text-[11px] text-purple-300 font-mono">
-                {reel.mentor.name} • #{reel.topicTag}
+                {reel.mentor?.name || "VidyaAI"} • #{reel.topicTag}
               </p>
             </div>
           </div>

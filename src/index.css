@@ -5,12 +5,12 @@
     --color-vidya-indigo: #4f46e5;
     --color-vidya-emerald: #10b981;
     --color-vidya-amber: #f59e0b;
-    --color-vidya-bg: #6f7279;
+    --color-vidya-bg: #020617;
   }
 
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #bfc4cf;
+    background-color: #020617;
     color: #f8fafc;
   }
   h1, h2, h3, h4, h5, h6 {
@@ -28,7 +28,7 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(234, 235, 236, 0.8);
+  background: rgba(2, 6, 23, 0.8);
 }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #4f46e5, #ddbe77);
@@ -59,9 +59,9 @@
 }
 
 .bg-vidya-glass {
-  background: rgba(239, 239, 240, 0.85);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(234, 234, 238, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .shadow-vidya-glow {

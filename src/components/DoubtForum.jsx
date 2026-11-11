@@ -549,7 +549,7 @@ export const DoubtForum = ({
                   className="flex items-center gap-1.5 text-xs text-blue-300 hover:text-blue-200 bg-blue-950/60 px-2.5 py-1 rounded-lg border border-blue-500/30 transition cursor-pointer"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Reply ({doubt.answers.length})</span>
+                  <span>Reply ({(doubt.answers || []).length})</span>
                 </button>
 
                 <span className="text-slate-700 font-bold select-none">|</span>

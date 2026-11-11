@@ -31,7 +31,7 @@ export const MentorStudioModal = ({
   onClose,
 }) => {
   const [activeTab, setActiveTab] = useState("live");
-  const [selectedMentor, setSelectedMentor] = useState(currentMentor);
+  const [selectedMentor, setSelectedMentor] = useState(currentMentor || allMentors[0] || {});
 
   // Form State
   const [title, setTitle] = useState("");
@@ -118,11 +118,11 @@ export const MentorStudioModal = ({
           <div className="flex items-center gap-3">
             <div className="relative">
               <img
-                src={selectedMentor.avatar}
-                alt={selectedMentor.name}
+                src={selectedMentor?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"}
+                alt={selectedMentor?.name || "Mentor"}
                 className="w-11 h-11 rounded-2xl object-cover border-2 border-amber-400 shadow-md"
               />
-              {selectedMentor.verified && (
+              {selectedMentor?.verified && (
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center">
                   <ShieldCheck className="w-2.5 h-2.5 text-white" />
                 </div>
@@ -131,12 +131,12 @@ export const MentorStudioModal = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-base font-bold text-white">
-                  {selectedMentor.name}&apos;s Creator Studio
+                  {selectedMentor?.name || "Mentor"}&apos;s Creator Studio
                 </h3>
-                <VerifiedMentorBadge mentor={selectedMentor} size="sm" showScore={true} />
+                {selectedMentor?.id && <VerifiedMentorBadge mentor={selectedMentor} size="sm" showScore={true} />}
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                {selectedMentor.specialization} • {selectedMentor.qualification}
+                {selectedMentor?.specialization || "Educator"} • {selectedMentor?.qualification || "Verified Mentor"}
               </p>
             </div>
           </div>

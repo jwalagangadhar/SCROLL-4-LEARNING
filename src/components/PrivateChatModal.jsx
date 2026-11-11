@@ -7,17 +7,23 @@ import {
 import { VerifiedMentorBadge } from "./VerifiedMentorBadge";
 
 export const PrivateChatModal = ({
-  mentor,
-  userProfile,
+  mentor = {},
+  userProfile = {},
   onClose,
   onDeductCoins,
 }) => {
+  const mentorName = mentor?.name || "Mentor";
+  const mentorSpec = mentor?.specialization || "General Studies";
+  const mentorFee = mentor?.privateChatFeeCoins || 50;
+  const userName = userProfile?.name || "Scholar";
+  const userCoins = userProfile?.vidyaCoins ?? 0;
+
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: "msg-init",
       sender: "mentor",
-      text: `Namaste ${userProfile.name}! I am ${mentor.name}. You can ask any specific concept doubt, send question images, or request personal strategy guidance for ${mentor.specialization}.`,
+      text: `Namaste ${userName}! I am ${mentorName}. You can ask any specific concept doubt, send question images, or request personal strategy guidance for ${mentorSpec}.`,
       timestamp: "Just now",
       type: "text",
     },
@@ -26,14 +32,14 @@ export const PrivateChatModal = ({
   const [isTyping, setIsTyping] = useState(false);
 
   const startConsultation = () => {
-    if (userProfile.vidyaCoins < mentor.privateChatFeeCoins) {
+    if (userCoins < mentorFee) {
       alert(
-        `You need ${mentor.privateChatFeeCoins} VidyaCoins for this consultation session. You currently have ${userProfile.vidyaCoins} coins. Watch a sponsor ad or grab coins from the store!`
+        `You need ${mentorFee} VidyaCoins for this consultation session. You currently have ${userCoins} coins. Watch a sponsor ad or grab coins from the store!`
       );
       return;
     }
 
-    const success = onDeductCoins(mentor.privateChatFeeCoins);
+    const success = onDeductCoins(mentorFee);
     if (success) {
       setIsSessionActive(true);
       setMessages((prev) => [
@@ -41,7 +47,7 @@ export const PrivateChatModal = ({
         {
           id: `msg-sys-${Date.now()}`,
           sender: "system",
-          text: `🎉 Consultation Session Unlocked! ${mentor.privateChatFeeCoins} VidyaCoins transferred to ${mentor.name}. Direct line active.`,
+          text: `🎉 Consultation Session Unlocked! ${mentorFee} VidyaCoins transferred to ${mentorName}. Direct line active.`,
           timestamp: "Just now",
           type: "text",
         },
@@ -114,8 +120,8 @@ export const PrivateChatModal = ({
           <div className="flex items-center gap-3">
             <div className="relative">
               <img
-                src={mentor.avatar}
-                alt={mentor.name}
+                src={mentor?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
+                alt={mentorName}
                 className="w-10 h-10 rounded-full object-cover border-2 border-amber-400"
               />
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 rounded-full border-2 border-slate-950" />
@@ -123,13 +129,13 @@ export const PrivateChatModal = ({
 
             <div>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-sm font-bold text-white">{mentor.name}</span>
+                <span className="text-sm font-bold text-white">{mentorName}</span>
                 <VerifiedMentorBadge mentor={mentor} size="xs" showScore={true} />
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-2">
-                <span>{mentor.specialization}</span>
+                <span>{mentorSpec}</span>
                 <span>•</span>
-                <span className="text-amber-400 font-medium">★ {mentor.rating}</span>
+                <span className="text-amber-400 font-medium">★ {mentor?.rating || "4.9"}</span>
               </div>
             </div>
           </div>
@@ -150,7 +156,7 @@ export const PrivateChatModal = ({
             </div>
 
             <h3 className="text-lg font-bold text-white mb-1">
-              1-on-1 Direct Consultation with {mentor.name}
+              1-on-1 Direct Consultation with {mentorName}
             </h3>
             <p className="text-xs text-slate-300 max-w-sm mb-6 leading-relaxed">
               Get personalized doubt resolution, study roadmap reviews, and voice/code breakdown from one of India&apos;s highest-rated educators.
@@ -160,13 +166,13 @@ export const PrivateChatModal = ({
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Consultation Rate:</span>
                 <span className="text-amber-400 font-bold font-mono">
-                  {mentor.privateChatFeeCoins} VidyaCoins
+                  {mentorFee} VidyaCoins
                 </span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Your Coin Balance:</span>
                 <span className="text-emerald-400 font-bold font-mono">
-                  {userProfile.vidyaCoins} Coins
+                  {userCoins} Coins
                 </span>
               </div>
               <div className="flex justify-between text-xs">
@@ -179,7 +185,7 @@ export const PrivateChatModal = ({
               onClick={startConsultation}
               className="w-full max-w-xs py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-sm rounded-xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition cursor-pointer"
             >
-              <Coins className="w-4 h-4 fill-current" /> Unlock Direct Chat ({mentor.privateChatFeeCoins} Coins)
+              <Coins className="w-4 h-4 fill-current" /> Unlock Direct Chat ({mentorFee} Coins)
             </button>
           </div>
         ) : (

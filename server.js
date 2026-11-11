@@ -57,7 +57,7 @@ Provide an engaging, clear mentor response formatted in structured markdown:
 4. **Quick Check Question** (A 1-line check question to test their understanding with the answer revealed at bottom).`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+        model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
         contents: prompt,
         config: {
           temperature: 0.7,
@@ -74,7 +74,7 @@ Provide an engaging, clear mentor response formatted in structured markdown:
       const fallbackResponse = `### 🎯 Concept Breakdown by ${mentorName || "Scroll 4 Learning Expert"}
 
 **1. Intuition & Core Idea:**
-${question.length > 30 ? `Great question regarding *${reelTitle || subject}*! The fundamental trick here is remembering the conservation principle and how state transitions propagate.` : `Here is the quickest way to remember this for exams and interviews:`}
+${question.length > 30 ? `Great question regarding *${reelTitle || subject || "this concept"}*! The fundamental trick here is remembering the conservation principle and how state transitions propagate.` : `Here is the quickest way to remember this for exams and interviews:`}
 - **Step 1:** Break the problem down into its minimal sub-case.
 - **Step 2:** Apply the standard formula or algorithmic invariant without skipping boundary conditions.
 - **Step 3:** Double check edge cases like $0$, null pointers, or negative indices.
@@ -148,7 +148,7 @@ Respond ONLY with valid JSON in this exact structure:
       contents.push(promptText);
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+        model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
         contents,
         config: {
           responseMimeType: "application/json",
@@ -217,15 +217,16 @@ Respond ONLY with valid JSON in this exact structure:
 // 3. AI Reel Summary & Flashcard Cheat-Sheet
 app.post("/api/ai/reel-summary", async (req, res) => {
   try {
-    const { title, subject, mentorName, description } = req.body;
+    const { title, reelTitle, subject, mentorName, description } = req.body;
+    const targetTitle = title || reelTitle || "Quick Micro-Lesson";
 
     const ai = getGenAI();
     if (ai) {
       const prompt = `You are a curriculum lead at Scroll 4 Learning. Summarize this 60-second micro-reel into a high-yield Revision Cheat-sheet.
-Reel: "${title}"
-Subject: "${subject}"
-Mentor: "${mentorName}"
-Description: "${description}"
+Reel: "${targetTitle}"
+Subject: "${subject || "General Topic"}"
+Mentor: "${mentorName || "Expert Educator"}"
+Description: "${description || ""}"
 
 Provide:
 1. **⚡ 60-Second TL;DR** (2 sentences)
@@ -233,7 +234,7 @@ Provide:
 3. **🧠 Memory Mnemonic / Visual Trick** (1 clever trick to recall in exams)`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+        model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
         contents: prompt,
         config: {
           temperature: 0.6,
@@ -245,7 +246,7 @@ Provide:
       });
     } else {
       return res.json({
-        summary: `### ⚡ 60-Second High-Yield Summary: ${title}
+        summary: `### ⚡ 60-Second High-Yield Summary: ${targetTitle}
 
 **1. TL;DR:**
 This concept is frequently tested in competitive exams. Understanding the underlying derivation takes less than a minute when you focus on the primary invariant.

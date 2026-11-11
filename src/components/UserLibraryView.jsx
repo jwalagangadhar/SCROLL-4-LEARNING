@@ -36,6 +36,10 @@ export const UserLibraryView = ({
   );
 
   const quizCount = (userProfile?.completedQuizIds || []).length;
+  const weeklyGoals = userProfile?.weeklyGoals;
+  const totalGoalTarget = (weeklyGoals?.goals || []).reduce((acc, g) => acc + (g.targetCount || 0), 0);
+  const totalGoalCurrent = (weeklyGoals?.goals || []).reduce((acc, g) => acc + Math.min(g.currentCount || 0, g.targetCount || 0), 0);
+  const goalPercentage = totalGoalTarget > 0 ? Math.min(100, Math.round((totalGoalCurrent / totalGoalTarget) * 100)) : 0;
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-4">
@@ -117,28 +121,13 @@ export const UserLibraryView = ({
             <div className="flex items-center gap-3 self-stretch md:self-auto justify-between md:justify-end">
               <div className="flex flex-col items-end">
                 <div className="text-xs font-mono font-bold text-amber-400">
-                  {Math.round(
-                    (userProfile.weeklyGoals.goals.reduce(
-                      (acc, g) => acc + Math.min(g.currentCount, g.targetCount),
-                      0
-                    ) /
-                      userProfile.weeklyGoals.goals.reduce((acc, g) => acc + g.targetCount, 0)) *
-                      100
-                  )}
-                  % Completed
+                  {goalPercentage}% Completed
                 </div>
                 <div className="w-24 sm:w-32 h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-1">
                   <div
                     className="h-full bg-gradient-to-r from-amber-500 to-orange-400 rounded-full transition-all duration-500"
                     style={{
-                      width: `${Math.round(
-                        (userProfile.weeklyGoals.goals.reduce(
-                          (acc, g) => acc + Math.min(g.currentCount, g.targetCount),
-                          0
-                        ) /
-                          userProfile.weeklyGoals.goals.reduce((acc, g) => acc + g.targetCount, 0)) *
-                          100
-                      )}%`,
+                      width: `${goalPercentage}%`,
                     }}
                   />
                 </div>

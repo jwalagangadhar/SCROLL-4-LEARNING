@@ -37,11 +37,11 @@ export const ReelCard = ({
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [isDescExpanded, setIsDescExpanded] = useState(false);
 
-  const isLiked = userProfile.likedReelIds.includes(reel.id);
-  const isBookmarked = userProfile.bookmarkedReelIds.includes(reel.id);
-  const isFollowing = userProfile.followingMentorIds.includes(reel.mentor.id);
-  const isUnlocked = !reel.isPaywalled || userProfile.unlockedReelIds.includes(reel.id);
-  const isQuizCompleted = userProfile.completedQuizIds.includes(reel.id);
+  const isLiked = Boolean(userProfile?.likedReelIds?.includes(reel.id));
+  const isBookmarked = Boolean(userProfile?.bookmarkedReelIds?.includes(reel.id));
+  const isFollowing = Boolean(reel.mentor?.id && userProfile?.followingMentorIds?.includes(reel.mentor.id));
+  const isUnlocked = !reel.isPaywalled || Boolean(userProfile?.unlockedReelIds?.includes(reel.id));
+  const isQuizCompleted = Boolean(userProfile?.completedQuizIds?.includes(reel.id));
 
   // Sync play state when this reel becomes active in feed
   useEffect(() => {
@@ -159,41 +159,43 @@ export const ReelCard = ({
           {/* Mentor Profile Bar */}
           <div className="flex items-center gap-2 pointer-events-auto">
             <img
-              src={reel.mentor.avatar}
-              alt={reel.mentor.name}
+              src={reel.mentor?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"}
+              alt={reel.mentor?.name || "Mentor"}
               className="w-9 h-9 rounded-full object-cover border border-amber-400/80 shadow-md"
             />
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <span className="text-xs font-bold text-white drop-shadow-md">
-                  {reel.mentor.name}
+                  {reel.mentor?.name || "Expert Mentor"}
                 </span>
-                <VerifiedMentorBadge mentor={reel.mentor} size="xs" showScore={false} />
+                {reel.mentor && <VerifiedMentorBadge mentor={reel.mentor} size="xs" showScore={false} />}
               </div>
               <span className="text-[10px] text-slate-300 drop-shadow">
-                {reel.mentor.specialization} • {reel.language}
+                {reel.mentor?.specialization || "Concept Breakdown"} • {reel.language || "Hinglish"}
               </span>
             </div>
 
             {/* Follow / Following Button */}
-            <button
-              onClick={() => onFollowToggle(reel.mentor.id)}
-              className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 transition ${
-                isFollowing
-                  ? "bg-white/20 text-white border border-white/30"
-                  : "bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold"
-              }`}
-            >
-              {isFollowing ? (
-                <>
-                  <UserCheck className="w-3 h-3" /> Following
-                </>
-              ) : (
-                <>
-                  <UserPlus className="w-3 h-3" /> Follow
-                </>
-              )}
-            </button>
+            {reel.mentor?.id && (
+              <button
+                onClick={() => onFollowToggle(reel.mentor.id)}
+                className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-1 transition ${
+                  isFollowing
+                    ? "bg-white/20 text-white border border-white/30"
+                    : "bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold"
+                }`}
+              >
+                {isFollowing ? (
+                  <>
+                    <UserCheck className="w-3 h-3" /> Following
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="w-3 h-3" /> Follow
+                  </>
+                )}
+              </button>
+            )}
           </div>
 
           {/* Reel Title & Expandable Description */}
@@ -227,7 +229,7 @@ export const ReelCard = ({
               />
             </div>
             <span className="text-[10px] font-mono text-white font-medium drop-shadow">
-              {reel.likes + (isLiked ? 1 : 0)}
+              {reel.likes}
             </span>
           </button>
 

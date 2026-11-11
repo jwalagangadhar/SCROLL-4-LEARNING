@@ -19,6 +19,8 @@ const CATEGORIES = [
 
 export const ReelFeed = ({
   reels = [],
+  targetReelId = null,
+  onClearTargetReelId = () => {},
   userProfile,
   selectedCategory,
   onSelectCategory,
@@ -37,22 +39,39 @@ export const ReelFeed = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Reset index to 0 when reels list or category updates
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [reels?.length, selectedCategory]);
-
   // Filter reels based on category and search query
   const filteredReels = (reels || []).filter((r) => {
     const matchesCat = selectedCategory === "All" || r.subject === selectedCategory;
     const matchesSearch =
       !searchQuery ||
-      r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.topicTag.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.mentor.name.toLowerCase().includes(searchQuery.toLowerCase());
+      (r.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (r.description || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (r.topicTag || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (r.mentor?.name || "").toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCat && matchesSearch;
   });
+
+  // Jump to targeted reel if requested (e.g. from Series or Library)
+  useEffect(() => {
+    if (targetReelId) {
+      let idx = filteredReels.findIndex((r) => r.id === targetReelId);
+      if (idx === -1 && selectedCategory !== "All") {
+        onSelectCategory("All");
+        idx = (reels || []).findIndex((r) => r.id === targetReelId);
+      }
+      if (idx !== -1) {
+        setActiveIndex(idx);
+      }
+      onClearTargetReelId();
+    }
+  }, [targetReelId, filteredReels, reels, selectedCategory]);
+
+  // Reset index to 0 when category changes (only when no specific targetReelId)
+  useEffect(() => {
+    if (!targetReelId) {
+      setActiveIndex(0);
+    }
+  }, [selectedCategory]);
 
   // Keyboard navigation (Arrow Up/Down)
   useEffect(() => {
