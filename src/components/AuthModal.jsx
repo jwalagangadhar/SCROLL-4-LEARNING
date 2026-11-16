@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   GraduationCap,
   BookOpen,
@@ -7,12 +7,9 @@ import {
   Lock,
   Mail,
   User,
-  ArrowRight,
   CheckCircle2,
   X,
-  Coins,
 } from "lucide-react";
-import { DEMO_STUDENT_USERS, DEMO_MENTOR_USERS } from "../data/mockAuthUsers";
 
 export const AuthModal = ({
   isOpen,
@@ -22,7 +19,7 @@ export const AuthModal = ({
   initialRole = "student",
 }) => {
   const [selectedRole, setSelectedRole] = useState(initialRole);
-  const [mode, setMode] = useState("quick_login");
+  const [mode, setMode] = useState("custom_login");
 
   // Form State
   const [name, setName] = useState("");
@@ -32,29 +29,14 @@ export const AuthModal = ({
   const [specialization, setSpecialization] = useState("JEE & NEET Physics");
   const [errorMsg, setErrorMsg] = useState("");
 
-  if (!isOpen) return null;
-
-  const handleQuickLogin = (demoUser) => {
-    let mentorData = undefined;
-    if (demoUser.role === "mentor" && demoUser.mentorId) {
-      mentorData = (allMentors || []).find((m) => m.id === demoUser.mentorId);
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedRole(initialRole);
+      setErrorMsg("");
     }
+  }, [isOpen, initialRole]);
 
-    const updatedProfile = {
-      id: demoUser.id,
-      name: demoUser.name,
-      email: demoUser.email,
-      avatar: demoUser.avatar,
-      role: demoUser.role,
-      vidyaCoins: demoUser.vidyaCoins,
-      coinsEarnedLifetime: demoUser.coinsEarnedLifetime,
-      streakDays: demoUser.streakDays,
-      targetExam: demoUser.targetExam || "JEE Advanced & Tech Skills",
-    };
-
-    onLogin(updatedProfile, demoUser.role, mentorData);
-    onClose();
-  };
+  if (!isOpen) return null;
 
   const handleCustomSubmit = (e) => {
     e.preventDefault();
@@ -78,8 +60,9 @@ export const AuthModal = ({
     let matchedMentor = undefined;
     if (userRole === "mentor") {
       matchedMentor =
-        (allMentors || []).find((m) => m.specialization.toLowerCase().includes(specialization.toLowerCase())) ||
-        allMentors[0];
+        (allMentors || []).find((m) =>
+          m?.specialization?.toLowerCase().includes(specialization.toLowerCase())
+        ) || allMentors?.[0];
     }
 
     const customUser = {
@@ -189,18 +172,9 @@ export const AuthModal = ({
         </div>
 
         {/* 2. Login Mode Nav */}
-        <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+        <div className="flex items-center gap-4 border-b border-slate-800 pb-2">
           <button
-            onClick={() => setMode("quick_login")}
-            className={`text-xs font-bold pb-2 px-1 transition relative cursor-pointer ${
-              mode === "quick_login"
-                ? "text-amber-400 border-b-2 border-amber-400"
-                : "text-slate-400 hover:text-slate-300"
-            }`}
-          >
-            ⚡ 1-Click Instant Demo Login
-          </button>
-          <button
+            type="button"
             onClick={() => setMode("custom_login")}
             className={`text-xs font-bold pb-2 px-1 transition relative cursor-pointer ${
               mode === "custom_login"
@@ -211,6 +185,7 @@ export const AuthModal = ({
             🔐 Email & Password
           </button>
           <button
+            type="button"
             onClick={() => setMode("register")}
             className={`text-xs font-bold pb-2 px-1 transition relative cursor-pointer ${
               mode === "register"
@@ -230,59 +205,7 @@ export const AuthModal = ({
           </div>
         )}
 
-        {/* 3. Content Section: Quick Login */}
-        {mode === "quick_login" && (
-          <div className="space-y-3">
-            <p className="text-xs text-slate-400">
-              Select a pre-configured {selectedRole === "student" ? "student" : "verified mentor"} account to test the {selectedRole === "student" ? "learning ecosystem" : "mentor studio & monetization"}:
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {(selectedRole === "student" ? DEMO_STUDENT_USERS : DEMO_MENTOR_USERS).map((user) => (
-                <div
-                  key={user.id}
-                  onClick={() => handleQuickLogin(user)}
-                  className="bg-slate-950 border border-slate-800 hover:border-amber-400/80 rounded-2xl p-4 transition-all hover:scale-[1.02] cursor-pointer flex flex-col justify-between group shadow-md"
-                >
-                  <div>
-                    <div className="flex items-center gap-2.5 mb-2">
-                      <img
-                        src={user.avatar}
-                        alt={user.name}
-                        className="w-10 h-10 rounded-xl object-cover border-2 border-amber-400/60"
-                      />
-                      <div className="min-w-0">
-                        <h4 className="text-xs font-bold text-white group-hover:text-amber-400 transition truncate">
-                          {user.name}
-                        </h4>
-                        <span className="text-[10px] text-slate-400 block truncate">
-                          {user.role === "student" ? user.targetExam : user.specialization}
-                        </span>
-                      </div>
-                    </div>
-
-                    <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed mb-3">
-                      {user.bio}
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-900 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-amber-400 flex items-center gap-1 font-bold">
-                      <Coins className="w-3 h-3" />
-                      {user.vidyaCoins}
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-300 bg-slate-850 px-2 py-0.5 rounded-lg group-hover:bg-amber-500 group-hover:text-slate-950 transition flex items-center gap-1">
-                      <span>Log In</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 4. Content Section: Custom Login / Register Form */}
+        {/* 3. Content Section: Custom Login / Register Form */}
         {(mode === "custom_login" || mode === "register") && (
           <form onSubmit={handleCustomSubmit} className="space-y-4">
             {mode === "register" && (
